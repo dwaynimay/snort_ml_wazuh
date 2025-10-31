@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  snort3:
+    build:
+      context: ./snort           # lokasi folder Dockerfile & semua file Snort
+      dockerfile: Dockerfile
+    image: snort3:latest         # nama image custom
+    container_name: snort3       # <--- typo kamu sebelumnya: "containter_name"
+    network_mode: host           # biar Snort bisa sniff interface host (Linux only)
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./logs:/var/log/snort    # mount log folder ke host
+    environment:
+      IFACE: "enp0s3"            # ganti sesuai interface host
+    restart: unless-stopped
