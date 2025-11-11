@@ -182,6 +182,12 @@ free -h
 |                                 | tmpfs      | 3.8G | 0    | 3.8G  | 0%   | /dev/shm       |
 |                                 | tmpfs      | 5.0M | 0    | 5.0M  | 0%   | /run/lock      |
 |                                 | tmpfs      | 776M | 4.0K | 776M  | 1%   | /run/user/1000 |
+| **Setelah instal Snort**        | tmpfs      | 776M | 1.6M | 775M  | 1%   | /run           |
+|                                 | /dev/sda2  | 69G  | 22G  | 44G   | 34%  | /              |
+|                                 | tmpfs      | 3.8G | 0    | 3.8G  | 0%   | /dev/shm       |
+|                                 | tmpfs      | 5.0M | 0    | 5.0M  | 0%   | /run/lock      |
+|                                 | tmpfs      | 776M | 4.0K | 776M  | 1%   | /run/user/1000 |
+|                                 | ---------- | ---- | ---- | ----- | ---- | -------------- |
 
 topologi
 Router (DHCP LAN)

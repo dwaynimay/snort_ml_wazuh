@@ -16,20 +16,7 @@ services:
              -c /etc/snort/snort.conf -A fast -l /var/log/snort"
 
   dvwa:
-    image: vulnerables/dvwa
+    image: vulnerables/web-dvwa:latest # <- perbaikan di sini
     container_name: dvwa
     ports: ["8081:80"]
-    environment:
-      MYSQL_HOST: "mariadb"
-    depends_on: [mariadb]
-    restart: unless-stopped
-
-  mariadb:
-    image: mariadb:10.6
-    container_name: dvwa-db
-    environment:
-      MYSQL_ROOT_PASSWORD: dvwa_root_pass
-      MYSQL_DATABASE: dvwa
-      MYSQL_USER: dvwa
-      MYSQL_PASSWORD: dvwa_pass
     restart: unless-stopped
