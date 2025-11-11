@@ -111,6 +111,42 @@ docker compose up -d
 docker exec -it snort3 snort -V
 ```
 
+```bash
+cd /usr/local/src/libml/examples/classifier
+```
+
+```bash
+python3 -m venv venv
+```
+
+```bash
+source venv/bin/activate
+```
+
+```bash
+pip install scapy
+```
+
+```bash
+python3 pcapgen.py
+```
+
+```bash
+pip install numpy tensorflow
+```
+
+```bash
+./train.py
+```
+
+```bash
+snort -c /usr/local/etc/snort/snort.lua --talos --lua 'snort_ml_engine = { http_param_model = "classifier.model" }; snort_ml = {}; trace = { modules = { snort_ml = {all =1 } } };' -r simulated_sql_injection.pcap
+```
+
+```bash
+python3 pcapgen.py
+```
+
 # konfigurasi wazuh
 
 ### tingkatkan limit VMA
@@ -187,7 +223,6 @@ free -h
 |                                 | tmpfs      | 3.8G | 0    | 3.8G  | 0%   | /dev/shm       |
 |                                 | tmpfs      | 5.0M | 0    | 5.0M  | 0%   | /run/lock      |
 |                                 | tmpfs      | 776M | 4.0K | 776M  | 1%   | /run/user/1000 |
-|                                 | ---------- | ---- | ---- | ----- | ---- | -------------- |
 
 topologi
 Router (DHCP LAN)
