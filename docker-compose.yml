@@ -1,18 +1,37 @@
 version: "3.9"
 
 services:
-  snort3:
+  snort-ips:
     build:
-      context: ./snort           # lokasi folder Dockerfile & semua file Snort
+      context: ./snort
       dockerfile: Dockerfile
-    image: snort3:latest         # nama image custom
-    container_name: snort3       # <--- typo kamu sebelumnya: "containter_name"
-    network_mode: host           # biar Snort bisa sniff interface host (Linux only)
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
+    image: snort3:latest
+    container_name: snort3
+    network_mode: "host"
+    restart: unless-stopped
+    cap_add: [NET_ADMIN, NET_RAW]
     volumes:
-      - ./logs:/var/log/snort    # mount log folder ke host
+      - ./snort/etc:/etc/snort:ro
+      - ./snort/log:/var/log/snort
+    command: >
+      sh -c "snort -Q --daq nfq --daq-var queue=0
+             -c /etc/snort/snort.conf -A fast -l /var/log/snort"
+
+  dvwa:
+    image: vulnerables/dvwa
+    container_name: dvwa
+    ports: ["8081:80"]
     environment:
-      IFACE: "enp0s3"            # ganti sesuai interface host
+      MYSQL_HOST: "mariadb"
+    depends_on: [mariadb]
+    restart: unless-stopped
+
+  mariadb:
+    image: mariadb:10.6
+    container_name: dvwa-db
+    environment:
+      MYSQL_ROOT_PASSWORD: dvwa_root_pass
+      MYSQL_DATABASE: dvwa
+      MYSQL_USER: dvwa
+      MYSQL_PASSWORD: dvwa_pass
     restart: unless-stopped

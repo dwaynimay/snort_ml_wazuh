@@ -68,7 +68,7 @@ RUN \
         vim \
         w3m \
         wget \
-        zlib1g-dev
+        zlib1g-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # buat user: sorty dan pass: oink
@@ -112,7 +112,7 @@ RUN git clone https://github.com/snort3/snort3.git /tmp/snort3 && \
     rm -rf /tmp/snort3
 
 # download dan instal snort-extra
-RUN git clone git://github.com/snortadmin/snort3_extra.git /tmp/snort3_extra && \
+RUN git clone https://github.com/snort3/snort3_extra.git /tmp/snort3_extra && \
     cd /tmp/snort3_extra && \
     ./configure_cmake.sh --prefix=/usr/local/ && \
     cd build && \
@@ -127,6 +127,3 @@ RUN mkdir -p /var/log/snort
 # copy custom rules dan pcapgen
 COPY rules/local.rules /usr/local/src/libml/examples/classifier/local.rules
 COPY pcapgen.py /usr/local/src/libml/examples/classifier/pcapgen.py
-
-# default command
-CMD ["/bin/bash"]
