@@ -13,54 +13,39 @@ ssh user@ip_address
 ssh-keygen -R ip_address
 
 #### konfigurasi docker 
-# 1) Prasyarat
+# Prasyarat
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl gnupg lsb-release
-
-# 2) Tambah repo resmi Docker
+# Tambah repo resmi Docker
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
   https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-# 3) Install Docker Engine + CLI + containerd + Compose v2 plugin
+# Install Docker Engine + CLI + containerd + Compose v2 plugin
 sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-# 4) Enable & start
+# Enable & start
 sudo systemctl enable --now docker
-
-# 5) Opsional: jalan tanpa sudo
+# Opsional: jalan tanpa sudo
 sudo usermod -aG docker $USER
 newgrp docker  # atau logout/login dulu
-
-# 6) Tes
+# Tes
 docker run --rm hello-world
 docker compose version  # cek plugin Compose v2
 
 #### konfigurasi snort
+cd snort_ml_wazuh/snort
+
 docker compose build
 docker compose up -d
 docker exec -it snort3 snort -V
 
-
-
-
-
-
-
-topologi
-Router (DHCP LAN)
-   ├─ Attacker (laptop) 192.168.1.50
-   └─ VM Lab (bridged) 192.168.1.10  <-- menjalankan Docker:
-         - Snort (network_mode: host, NFQUEUE)
-         - DVWA (target uji) -> dipublish: host:8081 -> container:80
-         - Wazuh (manager) -> mount /opt/snort/log
-
-
+### konfigurasi wazuh
 # tingkatkan limit VMA
+cd snort_ml_wazuh
+
 sudo sysctl -w vm.max_map_count=262144
 git clone https://github.com/wazuh/wazuh-docker.git -b v4.14.0
 cd wazuh-docker/single-node
@@ -77,6 +62,20 @@ https://ip_address
 |  Username |      Password      |
 | --------- | ------------------ |
 |   admin   |   SecretPassword   |
+
+
+
+
+
+topologi
+Router (DHCP LAN)
+   ├─ Attacker (laptop) 192.168.1.50
+   └─ VM Lab (bridged) 192.168.1.10  <-- menjalankan Docker:
+         - Snort (network_mode: host, NFQUEUE)
+         - DVWA (target uji) -> dipublish: host:8081 -> container:80
+         - Wazuh (manager) -> mount /opt/snort/log
+
+
 
 
 
